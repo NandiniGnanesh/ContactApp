@@ -10,7 +10,7 @@ public class ContactApp {
 
 		try {
 
-			mainMenuOption = showMainMenu();
+			mainMenuOption = showContactAppMainMenu();
 			processMainMenuSelectedOption(mainMenuOption);
 
 		} catch (Exception e) {
@@ -70,7 +70,7 @@ public class ContactApp {
 
 	}
 
-	private int showMainMenu() {
+	private int showContactAppMainMenu(){
 		
 		Scanner sc;
 		int choice = 0;
