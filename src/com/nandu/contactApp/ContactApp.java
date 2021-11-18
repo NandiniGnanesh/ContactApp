@@ -171,7 +171,7 @@ public class ContactApp {
 		return choice;
 	}
 
-	private void createContactsBookMenuSelectedOption(int selectedOption) {
+	private void processCreateContactsBookMenuSelectedOption(int selectedOption) {
 
 		switch (selectedOption) {
 
@@ -226,7 +226,7 @@ public class ContactApp {
 
 			createContactMenuOption = createContactsBookMenu();
 
-			createContactsBookMenuSelectedOption(createContactMenuOption);
+			processCreateContactsBookMenuSelectedOption(createContactMenuOption);
 
 
 		} catch (Exception e) {
