@@ -5,6 +5,9 @@ import java.util.Scanner;
 
 public class ContactApp {
 
+	Scanner sc1;//used to input values like int , float,double etc,.
+	Scanner sc2;//used to input more than one character
+
 	public void start() {
 
 		int mainMenuOption = 0;
@@ -74,12 +77,11 @@ public class ContactApp {
 
 	private int showContactAppMainMenu(){
 
-		Scanner sc;
 		int choice = 0;
 
 		try {
 
-			sc = new Scanner(System.in);
+			sc1 = new Scanner(System.in);
 
 			System.out.println("Press 1 to Create Contacts Book");
 			System.out.println("Press 2 to Load Contacts Book");
@@ -90,7 +92,7 @@ public class ContactApp {
 			printEmptyLines(1);
 			System.out.println("Enter choice : ");
 
-			choice = sc.nextInt();
+			choice = sc1.nextInt();
 
 		} catch (Exception e) {
 
@@ -111,25 +113,25 @@ public class ContactApp {
 
 	private void createContactsBook() {
 
-		Scanner sc1;
-		
 		String contactBookName;
 
 		try {
 
-			sc1 = new Scanner(System.in);
-			
+			sc2 = new Scanner(System.in);
+
 			System.out.println("Enter contact book name");
-			contactBookName = sc1.nextLine();
+			contactBookName = sc2.nextLine();
 
 			File f = new File("D:\\other\\javaProject\\"+contactBookName+".txt");
 
 			if(f.exists() & f.isFile() & f.getName().contains(contactBookName+".txt")){
 
-				throw new IllegalArgumentException("File already exists");
+				System.out.println("File already exists , please enter new name to create contact book");
+				contactBookName = sc2.nextLine();
 
 			}else {
 
+				f.createNewFile();
 				startToCreateContactBook();
 
 			}
@@ -139,17 +141,16 @@ public class ContactApp {
 		catch(Exception e) {
 
 			e.printStackTrace();
-			
+
 		}
 	}
 
 	private int createContactsBookMenu() {
 
 		int choice = 0;
-		Scanner sc;
 		try {
-			
-			sc = new Scanner(System.in);
+
+			sc1 = new Scanner(System.in);
 
 			System.out.println("Press 1 to Add a Contact");
 			System.out.println("Press 2 to Edit a Contact");
@@ -160,78 +161,78 @@ public class ContactApp {
 			printEmptyLines(1);
 
 			System.out.println("Enter choice : ");
-			choice = sc.nextInt();
+			choice = sc1.nextInt();
 
 		} catch (Exception e) {
 
 			e.printStackTrace();
-			
+
 		}
 		return choice;
 	}
-	
+
 	private void createContactsBookMenuSelectedOption(int selectedOption) {
-		
+
 		switch (selectedOption) {
-		
-			case 1: {
-				System.out.println("option 1 selected , logic yet to be implemented");
-			}
-			break;
-	
-			case 2: {
-				System.out.println("option 2 selected , logic yet to be implemented");
-			}
-			break;
-	
-			case 3:{
-				System.out.println("option 3 selected , logic yet to be implemented");
-			}
-			break;
-	
-			case 4: {
-				System.out.println("option 4 selected , logic yet to be implemented");
-			}
-			break;
-	
-			case 5:{
-				System.out.println("option 5 selected , logic yet to be implemented");
-			}	
-			break;
-	
-			case 6: {
-				System.out.println("going back to main menu");
-				start();
-			}	
-			break;
-	
-			default:{
-				
-				System.out.println("invalid option!!");
-				printEmptyLines(2);
-				startToCreateContactBook();
-			}
-			break;
-			
+
+		case 1: {
+			System.out.println("option 1 selected , logic yet to be implemented");
+		}
+		break;
+
+		case 2: {
+			System.out.println("option 2 selected , logic yet to be implemented");
+		}
+		break;
+
+		case 3:{
+			System.out.println("option 3 selected , logic yet to be implemented");
+		}
+		break;
+
+		case 4: {
+			System.out.println("option 4 selected , logic yet to be implemented");
+		}
+		break;
+
+		case 5:{
+			System.out.println("option 5 selected , logic yet to be implemented");
+		}	
+		break;
+
+		case 6: {
+			System.out.println("going back to main menu");
+			start();
+		}	
+		break;
+
+		default:{
+
+			System.out.println("invalid option!!");
+			printEmptyLines(2);
+			startToCreateContactBook();
+		}
+		break;
+
 		}
 		printEmptyLines(1);
 		startToCreateContactBook();
-		
+
 	}
-	
+
 	private void startToCreateContactBook() {
 		int createContactMenuOption;
 		try {
-			
+
 			createContactMenuOption = createContactsBookMenu();
 
 			createContactsBookMenuSelectedOption(createContactMenuOption);
 
-			
+
 		} catch (Exception e) {
-			
+
 			e.printStackTrace();
-			
+
 		}
 	}
 
