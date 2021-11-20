@@ -1,6 +1,9 @@
 package com.nandu.contactApp;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileReader;
 import java.util.Scanner;
 
 public class ContactApp {
@@ -9,6 +12,8 @@ public class ContactApp {
 	Scanner sc2; //used to input more than one character
 	File f;
 	String basePath;
+	BufferedReader br = null;
+	BufferedWriter bw = null;
 
 	{
 		sc1 = new Scanner(System.in);
@@ -37,18 +42,19 @@ public class ContactApp {
 		switch (selectedOption) {
 
 		case 1: {
+			
 			createContactsBook();
 		}
 		break;
 
 		case 2: {
-			//load contact book
+			
 			loadContactBook();
 		}
 		break;
 
 		case 3: {
-			System.out.println("Option 3 selected. Logic yet to be implemented!!");
+			searchContacts();
 		}
 		break;
 
@@ -83,6 +89,89 @@ public class ContactApp {
 
 	}
 
+	private void searchContacts() {
+		
+		String contactName;
+		int temp;
+		int count;
+		f = new File(basePath); 
+		
+		try {
+		
+			File[] ff = f.listFiles();
+
+			if(ff.length == 0) {
+
+				System.out.println("No contacts present to search, please create a contact book and add contacts before searching.");
+				start();
+				printEmptyLines(1);
+				
+
+			} else {
+				
+				System.out.println("Enter a contact name");
+				contactName = sc2.nextLine();
+				
+				if(contactName.equals(null) || contactName.equals("")) {
+					
+					System.out.println("Press 0 to enter a valid contact name or else press 1 to go back to previous menu.");
+					temp = sc1.nextInt();
+					
+					if(temp == 0) {
+						
+						printEmptyLines(1);
+						searchContacts();
+						
+					}
+					if(temp == 1) {
+						
+						printEmptyLines(1);
+						start();
+					}
+				}else {
+					
+					System.out.println("Search key : " +contactName);
+					
+					for(File fi : ff) {
+						br = new BufferedReader(new FileReader(fi));
+						count = 0;
+						System.out.println(fi.getName());
+						printEmptyLines(1);
+						
+						 String line;
+				         
+				         while((line = br.readLine()) != null) {
+				        	 
+				        	 String[] str = line.split(":");
+				        	 String name = str[0];		        	
+				        	 
+				        	 if(name.contains(contactName)) {
+				        		 
+				        		 System.out.println(line);
+				        		 count++;
+				        		
+				        	 }
+				        	 
+				         }
+				         if(count == 0) {
+				        	 
+				        	 System.out.println(" no contacts present with given search criteria");
+				         }
+				        
+				       
+				         printEmptyLines(1);	
+				}
+			}
+		}
+			
+		} catch (Exception e) {
+			
+			e.printStackTrace();
+		}
+		
+		
+	}
+
 	private void loadContactBook() {
 
 		String contactBooKName;
@@ -97,6 +186,9 @@ public class ContactApp {
 			if(ff.length == 0) {
 
 				System.out.println("No contact book is present, please create a contact book before proceeding.");
+				start();
+				printEmptyLines(1);
+				
 
 			} else {
 
