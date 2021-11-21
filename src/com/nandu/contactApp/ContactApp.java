@@ -59,12 +59,12 @@ public class ContactApp {
 		break;
 
 		case 4: {
-			System.out.println("Option 4 selected. Logic yet to be implemented!!");
+			listContacts();
 		}
 		break;
 
 		case 5: {
-			System.out.println("Option 5 selected. Logic yet to be implemented!!");
+			birthdayRemainders();
 		}
 		break;
 
@@ -87,6 +87,63 @@ public class ContactApp {
 		printEmptyLines(1);
 		start();
 
+	}
+
+	private void birthdayRemainders() {
+		f = new File(basePath);
+		try {
+			
+		} catch (Exception e) {
+			
+			e.printStackTrace();
+		}
+		
+		
+	}
+
+	private void listContacts() {
+		
+		f = new File(basePath);
+		String line;
+		int count;
+		try {
+			
+			File[] ff = f.listFiles();
+
+			if(ff.length == 0) {
+
+				System.out.println("No contacts to list, please create a contact book and add contacts before listing.");
+				start();
+				printEmptyLines(1);
+				
+
+			} else {
+				
+				for(File fi : ff) {
+					br = new BufferedReader(new FileReader(fi));
+					System.out.println(fi.getName());
+					count = 1;
+					printEmptyLines(1);
+					
+					 while((line = br.readLine()) != null) {
+						 
+						 System.out.println(count+ "." +line);
+						 count++;
+						 
+					 }
+					 if(count == 1 ) {
+						 
+						 System.out.println("no contacts to list");
+					 }
+					 printEmptyLines(1);
+			}
+			}
+			
+		} catch (Exception e) {
+			
+			e.printStackTrace();
+		}
+		
 	}
 
 	private void searchContacts() {
@@ -134,7 +191,7 @@ public class ContactApp {
 					
 					for(File fi : ff) {
 						br = new BufferedReader(new FileReader(fi));
-						count = 0;
+						count = 1;
 						System.out.println(fi.getName());
 						printEmptyLines(1);
 						
@@ -147,13 +204,13 @@ public class ContactApp {
 				        	 
 				        	 if(name.contains(contactName)) {
 				        		 
-				        		 System.out.println(line);
+				        		 System.out.println(count+ "." +line);
 				        		 count++;
 				        		
 				        	 }
 				        	 
 				         }
-				         if(count == 0) {
+				         if(count == 1) {
 				        	 
 				        	 System.out.println(" no contacts present with given search criteria");
 				         }
