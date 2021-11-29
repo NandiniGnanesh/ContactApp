@@ -8,6 +8,7 @@ public class ContactApp {
 	Scanner sc1;
 	Scanner sc2;
 	final String directory;
+	File[] fileArray;
 	File f;
 
 	{
@@ -134,7 +135,7 @@ public class ContactApp {
 			System.out.println("Enter the name of a contact book");
 			contactBookName = sc2.nextLine() + ".txt";
 
-			File[] fileArray = f.listFiles();
+			fileArray = f.listFiles();
 
 			for(File file : fileArray) {
 
@@ -178,7 +179,7 @@ public class ContactApp {
 
 		try {
 
-			File[] fileArray = f.listFiles();
+			fileArray = f.listFiles();
 
 			for(File file : fileArray) {
 
@@ -310,6 +311,153 @@ public class ContactApp {
 		}
 	}
 
+	public void loadContactBook() {
+		
+		int contactNumber;
+		String ContactBookName;
+		
+		boolean isValidContactNumber = false;
+		int count1 = 1;
+		int count2 = 1;
+		
+		try {
+			
+			if(checkIfAnyContactBookExists()) {
+				
+				fileArray = f.listFiles();
+				
+				System.out.println("Select any of the contact books listed below, else enter 0 to go back to the previous menu");
+				for(File file : fileArray) {
+					
+					if(file.getName().contains(".txt")){
+						
+						System.out.println((count1++) + "." +file.getName());
+					}
+				}
+				
+				System.out.println("Enter a contact book number :");
+				contactNumber = sc1.nextInt();//2
+				
+				if(contactNumber == 0) {
+					
+					startContactApp();
+					printEmptyLines(1);
+					
+				}else {
+					
+					for(File file : fileArray) {
+						
+						if(file.getName().contains(".txt")){
+							
+							ContactBookName = count2 + "." +file.getName();
+							if(count2 == contactNumber) {
+								
+								isValidContactNumber = true;
+							}
+							count2++;
+						}
+					}
+					
+					if(isValidContactNumber == true) {
+						
+						startToCreateContactBook();
+						printEmptyLines(1);
+						
+					}
+					if(isValidContactNumber == false) {
+						
+						checkIfValidContactBookNumberEntered();
+						
+					}	
+				}
+				
+			}else {
+				
+				System.out.println("No contact book is present, please create a contact book before proceeding.");
+				printEmptyLines(1);
+				startContactApp();
+				
+			}
+		} catch (Exception e) {
+			
+			e.printStackTrace();
+		}
+	}
+	
+	public boolean checkIfAnyContactBookExists() {
+		
+		boolean isExists = true;
+		
+		try {
+			
+			fileArray = f.listFiles();
+			
+			if(fileArray.length == 0) {
+				
+				isExists = false;
+			}
+			
+		} catch (Exception e) {
+			
+			e.printStackTrace();
+			
+		}
+		
+		return isExists;
+	}
+	
+	public void checkIfValidContactBookNumberEntered() {
+		
+		int contactBookNumber;
+		String ContactBookName;
+		boolean isValidContactNumber = false;
+		
+		int count = 1;
+		try {
+			
+			System.out.println("Invalid contact book selected, enter valid contact book number else enter 0 to go back to previous menu.");
+			
+			System.out.println("Enter a contact book number : ");
+			contactBookNumber = sc1.nextInt();//2
+			
+			if(contactBookNumber == 0) {
+				
+				startContactApp();
+				printEmptyLines(1);
+				
+			}else {
+				
+				for(File file : fileArray) {
+					
+					if(file.getName().contains(".txt")){
+						
+						ContactBookName = count + "." +file.getName();
+				
+						if(count == contactBookNumber) {
+							
+							isValidContactNumber = true;
+						}
+						count++;
+					}
+				
+				}
+				
+				if(isValidContactNumber == true) {
+					
+					startToCreateContactBook();
+					printEmptyLines(1);
+					
+				}else {
+					
+					checkIfValidContactBookNumberEntered();
+				}
+			}
+		} catch (Exception e) {
+			
+			 e.printStackTrace();
+		}
+	}
+	
 	public void printEmptyLines(int num) {
 
 		for(int i = 0 ; i <= num; i++) {
