@@ -1,6 +1,8 @@
 package com.nandu.contactApp;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.util.Scanner;
 
 public class ContactApp {
@@ -17,6 +19,7 @@ public class ContactApp {
 		directory = System.getProperty("user.dir");
 		System.out.println("current dir = " + directory);
 		f = new File(directory);
+
 	}
 
 	public void startContactApp() {
@@ -80,7 +83,7 @@ public class ContactApp {
 
 			case 3: {
 
-				System.out.println("option 3 selected , logic yet to be implemented!!");
+				searchContactBook();
 			}
 			break;
 
@@ -129,6 +132,7 @@ public class ContactApp {
 
 		String contactBookName;
 		String temp;
+		boolean isContactBookExists = false;
 
 		try {
 
@@ -141,28 +145,34 @@ public class ContactApp {
 
 				if(file.getName().equals(contactBookName)) {
 
-					System.out.println("contact book already exists , enter another name or else enter back to go back to previous menu");
-					temp = sc2.nextLine();
+					isContactBookExists = true;
 
-					if(temp.equals("back")) {
+				}
+			}
 
-						startContactApp();
+			if(isContactBookExists == true) {
 
-					}else {
+				System.out.println("contact book already exists , enter another name or else enter back to go back to previous menu");
+				temp = sc2.nextLine();
 
-						temp = temp + ".txt";
+				if(temp.equals("back")) {
 
-						checkIfNameExists(temp);
-
-					}
-					printEmptyLines(1);
+					startContactApp();
 
 				}else {
 
-					f.createNewFile();
-					//display menu 2 
-					startToCreateContactBook();
+					temp = temp + ".txt";
+
+					checkIfNameExists(temp);
+
 				}
+				printEmptyLines(1);
+
+			}
+			if(isContactBookExists == false){
+
+				f.createNewFile(); 
+				startToCreateContactBook();
 			}
 
 		} catch (Exception e) {
@@ -176,7 +186,7 @@ public class ContactApp {
 	public void checkIfNameExists(String name) {
 
 		String ContactBookname;
-
+		boolean isContactBookExists = false;
 		try {
 
 			fileArray = f.listFiles();
@@ -185,18 +195,29 @@ public class ContactApp {
 
 				if(file.getName().equals(name)) {
 
-					System.out.println("name already exists!! enter another name or else enter back to go back to previous menu");
-					ContactBookname = sc2.nextLine();
+					isContactBookExists = true;
 
-					if(ContactBookname.equals("back")){
-
-						startContactApp();
-						printEmptyLines(1);
-					}else {
-
-						checkIfNameExists(ContactBookname + ".txt");
-					}
 				}
+			}
+
+			if(isContactBookExists == true) {
+
+				System.out.println("name already exists!! enter another name or else enter back to go back to previous menu");
+				ContactBookname = sc2.nextLine();
+
+				if(ContactBookname.equals("back")){
+
+					startContactApp();
+					printEmptyLines(1);
+				}else {
+
+					checkIfNameExists(ContactBookname + ".txt");
+				}
+
+			}else {
+
+				startToCreateContactBook();
+				printEmptyLines(1);
 			}
 
 		} catch (Exception e) {
@@ -312,152 +333,281 @@ public class ContactApp {
 	}
 
 	public void loadContactBook() {
-		
+
 		int contactNumber;
 		String ContactBookName;
-		
+
 		boolean isValidContactNumber = false;
 		int count1 = 1;
 		int count2 = 1;
-		
+
 		try {
-			
+
 			if(checkIfAnyContactBookExists()) {
-				
+
 				fileArray = f.listFiles();
-				
+
 				System.out.println("Select any of the contact books listed below, else enter 0 to go back to the previous menu");
 				for(File file : fileArray) {
-					
+
 					if(file.getName().contains(".txt")){
-						
+
 						System.out.println((count1++) + "." +file.getName());
 					}
 				}
-				
+
 				System.out.println("Enter a contact book number :");
 				contactNumber = sc1.nextInt();//2
-				
+
 				if(contactNumber == 0) {
-					
+
 					startContactApp();
 					printEmptyLines(1);
-					
+
 				}else {
-					
+
 					for(File file : fileArray) {
-						
+
 						if(file.getName().contains(".txt")){
-							
+
 							ContactBookName = count2 + "." +file.getName();
 							if(count2 == contactNumber) {
-								
+
 								isValidContactNumber = true;
 							}
 							count2++;
 						}
 					}
-					
+
 					if(isValidContactNumber == true) {
-						
+
 						startToCreateContactBook();
 						printEmptyLines(1);
-						
+
 					}
 					if(isValidContactNumber == false) {
-						
+
 						checkIfValidContactBookNumberEntered();
-						
+
 					}	
 				}
-				
+
 			}else {
-				
+
 				System.out.println("No contact book is present, please create a contact book before proceeding.");
 				printEmptyLines(1);
 				startContactApp();
-				
+
 			}
 		} catch (Exception e) {
-			
+
 			e.printStackTrace();
 		}
 	}
-	
+
 	public boolean checkIfAnyContactBookExists() {
-		
+
 		boolean isExists = true;
-		
+		int count = 0;
+
 		try {
-			
+
 			fileArray = f.listFiles();
-			
-			if(fileArray.length == 0) {
-				
+
+			for(File file : fileArray) {
+
+				if(file.getName().contains(".txt")){
+
+					count++;
+				}
+			}
+
+			if(count == 0) {
+
 				isExists = false;
 			}
-			
+
 		} catch (Exception e) {
-			
+
 			e.printStackTrace();
-			
+
 		}
-		
+
 		return isExists;
 	}
-	
+
 	public void checkIfValidContactBookNumberEntered() {
-		
+
 		int contactBookNumber;
 		String ContactBookName;
 		boolean isValidContactNumber = false;
-		
+
 		int count = 1;
 		try {
-			
+
 			System.out.println("Invalid contact book selected, enter valid contact book number else enter 0 to go back to previous menu.");
-			
+
 			System.out.println("Enter a contact book number : ");
 			contactBookNumber = sc1.nextInt();//2
-			
+
 			if(contactBookNumber == 0) {
-				
+
 				startContactApp();
 				printEmptyLines(1);
-				
+
 			}else {
-				
+
 				for(File file : fileArray) {
-					
+
 					if(file.getName().contains(".txt")){
-						
+
 						ContactBookName = count + "." +file.getName();
-				
+
 						if(count == contactBookNumber) {
-							
+
 							isValidContactNumber = true;
 						}
 						count++;
 					}
-				
+
 				}
-				
+
 				if(isValidContactNumber == true) {
-					
+
 					startToCreateContactBook();
 					printEmptyLines(1);
-					
+
 				}else {
-					
+
 					checkIfValidContactBookNumberEntered();
 				}
 			}
 		} catch (Exception e) {
-			
-			 e.printStackTrace();
+
+			e.printStackTrace();
 		}
 	}
-	
+
+	public void searchContactBook() {
+
+		String contactName;
+		String temp;
+
+		try {
+
+			if(checkIfAnyContactBookExists()) {
+
+				System.out.println("Enter contact name to search");
+				contactName = sc2.nextLine();
+
+				if(contactName.equals("")) {
+
+					System.out.println("invalid contact name , enter a valid name or else enter back to goback to previous menu");
+					temp = sc2.nextLine();
+
+					if(temp.equals("back")) {
+
+						startContactApp();
+						printEmptyLines(1);
+
+					}else {
+
+						isValidNameEntered(temp);
+					}
+				}else {
+
+					validContactNameEnteredforSearching(contactName);
+
+				}
+			}else {
+
+				System.out.println("No contacts present to search, please create a contact book and add contacts before searching.");
+				printEmptyLines(1);
+				startContactApp();
+
+			}
+		} catch (Exception e) {
+
+			e.printStackTrace();
+		}
+
+	}
+
+	public void isValidNameEntered(String name) {
+
+		String contactName;
+
+		try {
+
+			if(name.equals("")) {
+
+				System.out.println("invalid contact name , enter a valid name or else enter back to goback to previous menu");
+				contactName = sc2.nextLine();
+
+				if(contactName.equals("back")) {
+
+					startContactApp();
+					printEmptyLines(1);
+
+				}else {
+
+					isValidNameEntered(contactName);
+
+				}
+
+			}else {
+
+				validContactNameEnteredforSearching(name);
+			}
+
+		} catch (Exception e) {
+
+			e.printStackTrace();
+		}
+	}
+	public void validContactNameEnteredforSearching(String contactName) {
+
+		String line;
+		boolean isSearchKeyPresent;
+		BufferedReader br = null;
+
+		try {
+
+			System.out.println("search key : " +contactName);
+			fileArray = f.listFiles();
+
+			for(File file : fileArray) {
+
+				if(file.getName().contains(".txt")){
+
+					br = new BufferedReader(new FileReader(file.getCanonicalPath()));
+					System.out.println(file.getName());
+					printEmptyLines(1);
+					isSearchKeyPresent = false;
+
+					while((line = br.readLine()) != null) {
+
+						String[] arr = line.split(":");			
+						if(arr[0].contains(contactName)) {
+
+							System.out.println(line);
+							isSearchKeyPresent = true;
+						}
+					}
+
+					if(isSearchKeyPresent == false) {
+
+						System.out.println("no contacts present with given search criteria");
+
+					}
+				}
+			}
+		} catch (Exception e) {
+
+			e.printStackTrace();
+		}
+	}
+
 	public void printEmptyLines(int num) {
 
 		for(int i = 0 ; i <= num; i++) {
