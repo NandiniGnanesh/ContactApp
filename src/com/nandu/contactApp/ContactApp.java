@@ -3,6 +3,8 @@ package com.nandu.contactApp;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Scanner;
 
 public class ContactApp {
@@ -96,7 +98,7 @@ public class ContactApp {
 
 			case 5: {
 
-//				birthdayRemainders();
+				birthdayRemainders();
 			}
 			break;
 
@@ -689,6 +691,78 @@ public class ContactApp {
 		}
 	}
 
+	public void birthdayRemainders() {
+		
+		Date date;
+		SimpleDateFormat formatter ;
+		String currentDate;
+		boolean isAnyContactsExists;
+		String temp;
+		String line;
+		String[] stringArr;
+		String dob;
+		
+		try {
+			
+			if(checkIfAnyContactBookExists()) {
+				
+				 date = new Date();
+			     formatter = new SimpleDateFormat("dd-MM-yyyy");
+			     
+			     currentDate = formatter.format(date);
+			     System.out.print("Current date: "+currentDate);
+			     printEmptyLines(1);
+			     
+			     fileArray = f.listFiles();
+					
+					for(File file : fileArray) {
+						
+						if(file.getName().contains(".txt")) {
+							
+							br = new BufferedReader(new FileReader(file.getCanonicalPath()));
+							isAnyContactsExists = false;
+							
+							temp = file.getName();
+							System.out.println(temp.substring(0 , (temp.length() - 4)));
+							
+							while((line = br.readLine()) != null){
+							
+								isAnyContactsExists = true;							
+								stringArr = line.split(":");
+								
+								dob = stringArr[3];
+								if(dob.equals(currentDate)) {
+									
+									System.out.println(line);
+								}
+								
+							}
+							
+							if(isAnyContactsExists == false) {
+								
+								System.out.println("no contacts to list");
+							}
+							
+							printEmptyLines(1);
+							
+						}
+					}
+					
+					startContactApp();
+					printEmptyLines(1);
+			      
+			}else {
+				
+				System.out.println("No contacts to list, please create a contact book and add contacts before getting birthday reminders.");
+				printEmptyLines(1);
+				startContactApp();
+			}
+			
+		} catch (Exception e) {
+			
+			e.printStackTrace();
+		}
+	}
 	public void printEmptyLines(int num) {
 
 		for(int i = 0 ; i <= num; i++) {
