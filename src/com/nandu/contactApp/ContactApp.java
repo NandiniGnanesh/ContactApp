@@ -12,13 +12,14 @@ public class ContactApp {
 	final String directory;
 	File[] fileArray;
 	File f;
+	BufferedReader br = null;
 
 	{
 		sc1 = new Scanner(System.in);//used to input integer , double , float values etc,.
 		sc2 = new Scanner(System.in);//used to input more than one character
 		directory = System.getProperty("user.dir");
 		System.out.println("current dir = " + directory);
-		f = new File(directory);
+		//		f = new File(directory);
 
 	}
 
@@ -89,13 +90,13 @@ public class ContactApp {
 
 			case 4: {
 
-				System.out.println("option 4 selected , logic yet to be implemented!!");
+				listContacts();
 			}
 			break;
 
 			case 5: {
 
-				System.out.println("option 5 selected , logic yet to be implemented!!");
+//				birthdayRemainders();
 			}
 			break;
 
@@ -132,22 +133,30 @@ public class ContactApp {
 
 		String contactBookName;
 		String temp;
+		File f1 = null;
 		boolean isContactBookExists = false;
-
+		f = new File(directory);
 		try {
 
 			System.out.println("Enter the name of a contact book");
 			contactBookName = sc2.nextLine() + ".txt";
+			f1 = new File(contactBookName);
 
 			fileArray = f.listFiles();
 
 			for(File file : fileArray) {
 
-				if(file.getName().equals(contactBookName)) {
+				if(file.getName().contains(".txt")) {
 
-					isContactBookExists = true;
 
+
+					if(file.getName().equals(contactBookName)) {
+
+						isContactBookExists = true;
+
+					}
 				}
+
 			}
 
 			if(isContactBookExists == true) {
@@ -171,7 +180,7 @@ public class ContactApp {
 			}
 			if(isContactBookExists == false){
 
-				f.createNewFile(); 
+				f1.createNewFile();
 				startToCreateContactBook();
 			}
 
@@ -187,16 +196,24 @@ public class ContactApp {
 
 		String ContactBookname;
 		boolean isContactBookExists = false;
+		f = new File(directory);
+		File f1;
+
 		try {
+
+			f1 = new File(name);
 
 			fileArray = f.listFiles();
 
 			for(File file : fileArray) {
 
-				if(file.getName().equals(name)) {
+				if(file.getName().contains(".txt")) {
 
-					isContactBookExists = true;
+					if(file.getName().equals(name)) {
 
+						isContactBookExists = true;
+
+					}
 				}
 			}
 
@@ -216,6 +233,7 @@ public class ContactApp {
 
 			}else {
 
+				f1.createNewFile();
 				startToCreateContactBook();
 				printEmptyLines(1);
 			}
@@ -336,6 +354,7 @@ public class ContactApp {
 
 		int contactNumber;
 		String ContactBookName;
+		f = new File(directory);
 
 		boolean isValidContactNumber = false;
 		int count1 = 1;
@@ -409,6 +428,8 @@ public class ContactApp {
 
 		boolean isExists = true;
 		int count = 0;
+		f = new File(directory);
+
 
 		try {
 
@@ -441,6 +462,7 @@ public class ContactApp {
 		int contactBookNumber;
 		String ContactBookName;
 		boolean isValidContactNumber = false;
+		f = new File(directory);
 
 		int count = 1;
 		try {
@@ -569,7 +591,8 @@ public class ContactApp {
 
 		String line;
 		boolean isSearchKeyPresent;
-		BufferedReader br = null;
+		String temp;
+		f = new File(directory);
 
 		try {
 
@@ -581,7 +604,10 @@ public class ContactApp {
 				if(file.getName().contains(".txt")){
 
 					br = new BufferedReader(new FileReader(file.getCanonicalPath()));
-					System.out.println(file.getName());
+
+					temp = file.getName();
+					System.out.println((temp.substring(0 , (temp.length() - 4))));
+
 					printEmptyLines(1);
 					isSearchKeyPresent = false;
 
@@ -605,6 +631,61 @@ public class ContactApp {
 		} catch (Exception e) {
 
 			e.printStackTrace();
+		}
+	}
+	
+	public void listContacts() {
+		
+		f = new File(directory);
+		String temp;
+		String line;
+		boolean isAnyContactsExists;
+		
+		try {
+			
+			if(checkIfAnyContactBookExists()) {
+				
+				fileArray = f.listFiles();
+				
+				for(File file : fileArray) {
+					
+					if(file.getName().contains(".txt")) {
+						
+						br = new BufferedReader(new FileReader(file.getCanonicalPath()));
+						isAnyContactsExists = false;
+						
+						temp = file.getName();
+						System.out.println(temp.substring(0 , (temp.length() - 4)));
+						
+						while((line = br.readLine()) != null){
+						
+							System.out.println(line);
+							isAnyContactsExists = true;
+							
+						}
+						
+						if(isAnyContactsExists == false) {
+							
+							System.out.println("no contacts to list");
+						}
+						
+					}
+				}
+				
+				printEmptyLines(1);
+				startContactApp();
+				
+			}else {
+				
+				System.out.println("No contacts to list, please create a contact book and add contacts before listing.");
+				printEmptyLines(1);
+				startContactApp();
+			}
+			
+		} catch (Exception e) {
+			
+			e.printStackTrace();
+			
 		}
 	}
 
